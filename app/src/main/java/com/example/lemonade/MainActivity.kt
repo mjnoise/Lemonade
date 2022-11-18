@@ -10,22 +10,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.MaterialTheme.shapes
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lemonade.ui.theme.LemonadeTheme
-import com.google.firebase.crashlytics.buildtools.reloc.javax.annotation.meta.When
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +41,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LemonadeWithImagesAndText(modifier: Modifier = Modifier) {
     var thisStep by remember {
-        mutableStateOf(2)
+        mutableStateOf(1)
     }
 
     var squeezeNeeded by remember {
@@ -56,9 +51,9 @@ fun LemonadeWithImagesAndText(modifier: Modifier = Modifier) {
     when (thisStep) {
         1 -> {
             ImagesAndText(
-                text = "Tap the lemon tree to select a lemon",
+                text = stringResource(R.string.lemon_tree_title),
                 imageResource = painterResource(id = R.drawable.lemon_tree),
-                imageContent = "Lemon Tree",
+                imageContent = stringResource(R.string.lemon_tree),
                 onImageClick = {
                     thisStep = 2
                     squeezeNeeded = (2..4).random()
@@ -68,11 +63,9 @@ fun LemonadeWithImagesAndText(modifier: Modifier = Modifier) {
         2 -> {
             Column (modifier = modifier.wrapContentSize(Alignment.Center)) {
                 ImagesAndText(
-                    text = "Keep tapping the lemon to squeeze it",
+                    text = stringResource(R.string.lemon_squeeze_title),
                     imageResource = painterResource(id = R.drawable.lemon_squeeze),
-                    imageContent = "Lemon",
-                    modifier = Modifier.weight(1F, false)
-
+                    imageContent = stringResource(R.string.lemon)
                     ) {
 
                     squeezeNeeded--
@@ -83,7 +76,7 @@ fun LemonadeWithImagesAndText(modifier: Modifier = Modifier) {
                 }
                 Spacer(modifier = Modifier.height(15.dp))
                 Text(
-                    text = "Squeezes left $squeezeNeeded",
+                    text = stringResource(R.string.squeeze_left) + squeezeNeeded,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
@@ -92,18 +85,18 @@ fun LemonadeWithImagesAndText(modifier: Modifier = Modifier) {
 
         3 -> {
             ImagesAndText(
-                text = "Tap the lemonade to drink it",
+                text = stringResource(R.string.lemonade_drink_title),
                 imageResource = painterResource(id = R.drawable.lemon_drink),
-                imageContent = "Glass of lemonade",
+                imageContent = stringResource(R.string.lemonade_glass),
                 onImageClick = {
                     thisStep++
                 }
             )
         }
         else -> ImagesAndText(
-            text = "Tap the empty glass to start again",
+            text = stringResource(R.string.start_again_title),
             imageResource = painterResource(id = R.drawable.lemon_restart),
-            imageContent = "Empty glass"
+            imageContent = stringResource(R.string.empty_glass)
         ) {
             thisStep = 1
         }
