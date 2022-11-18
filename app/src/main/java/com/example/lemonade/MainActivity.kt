@@ -14,6 +14,7 @@ import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.MaterialTheme.shapes
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -45,22 +46,67 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LemonadeWithImagesAndText(modifier: Modifier = Modifier) {
     var thisStep by remember {
-        mutableStateOf(1)
+        mutableStateOf(2)
+    }
+
+    var squeezeNeeded by remember {
+        mutableStateOf(0)
     }
 
     when (thisStep) {
         1 -> {
             ImagesAndText(
-                modifier = modifier,
                 text = "Tap the lemon tree to select a lemon",
                 imageResource = painterResource(id = R.drawable.lemon_tree),
                 imageContent = "Lemon Tree",
                 onImageClick = {
                     thisStep = 2
+                    squeezeNeeded = (2..4).random()
                 }
             )
         }
-        else -> ""
+        2 -> {
+            Column (modifier = modifier.wrapContentSize(Alignment.Center)) {
+                ImagesAndText(
+                    text = "Keep tapping the lemon to squeeze it",
+                    imageResource = painterResource(id = R.drawable.lemon_squeeze),
+                    imageContent = "Lemon",
+                    modifier = Modifier.weight(1F, false)
+
+                    ) {
+
+                    squeezeNeeded--
+                    if (squeezeNeeded == 0) {
+                        thisStep++
+                    }
+
+                }
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(
+                    text = "Squeezes left $squeezeNeeded",
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+
+        }
+
+        3 -> {
+            ImagesAndText(
+                text = "Tap the lemonade to drink it",
+                imageResource = painterResource(id = R.drawable.lemon_drink),
+                imageContent = "Glass of lemonade",
+                onImageClick = {
+                    thisStep++
+                }
+            )
+        }
+        else -> ImagesAndText(
+            text = "Tap the empty glass to start again",
+            imageResource = painterResource(id = R.drawable.lemon_restart),
+            imageContent = "Empty glass"
+        ) {
+            thisStep = 1
+        }
     }
 }
 
@@ -73,9 +119,9 @@ fun ImagesAndText(
     onImageClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
+        modifier = modifier
     ) {
         Text(
             text = text, fontSize = 16.sp
@@ -86,9 +132,9 @@ fun ImagesAndText(
             contentDescription = imageContent,
             modifier = Modifier
                 .wrapContentSize()
-                .clickable (
+                .clickable(
                     onClick = onImageClick
-                        )
+                )
                 .border(
                     border = BorderStroke(
                         width = 2.dp,
@@ -96,10 +142,7 @@ fun ImagesAndText(
                     ),
                     shape = RoundedCornerShape(4.dp)
                 )
-
-
-
-            )
+        )
     }
 }
 
